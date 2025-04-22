@@ -4,6 +4,14 @@ from colorama import Fore, init
 
 init(autoreset=True)
 
+# ইউজার ইনফো
+users = {
+    "Mahir": {"password": "1234"}
+}
+
+# অ্যাপ্রুভাল কী (তুই এটা পরে চেঞ্জ করে নিতে পারবি)
+approval_key = "mahir@2024"
+
 def show_logo(username):
     logo = f"""
 \033[0;92m╔━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╗
@@ -31,14 +39,36 @@ def show_menu():
 """
     print(menu)
 
+def authenticate_user():
+    print(f"{Fore.YELLOW}Please login to continue...\n")
+    username = input(f"{Fore.CYAN}Username: {Fore.RESET}")
+    password = input(f"{Fore.CYAN}Password: {Fore.RESET}")
+
+    if username in users and users[username]["password"] == password:
+        key = input(f"{Fore.CYAN}Enter Approval Key: {Fore.RESET}")
+        if key == approval_key:
+            # Clear terminal after approval key is entered
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"{Fore.GREEN}Access granted! Welcome, {username}.\n")
+            return username
+        else:
+            print(f"{Fore.RED}Invalid Approval Key. Access Denied.")
+            return None
+    else:
+        print(f"{Fore.RED}Incorrect username or password.")
+        return None
+
 def main():
     os.system('cls' if os.name == 'nt' else 'clear')
-    username = "MAHIR SHAHED"
+
+    username = authenticate_user()
+    if not username:
+        sys.exit()
+
     show_logo(username)
     show_menu()
 
     choice = input(f"{Fore.CYAN}Enter your choice (1-8): {Fore.RESET}")
-
     if choice == '1':
         print(f"{Fore.GREEN}Downloading YouTube video...")
     elif choice == '2':
